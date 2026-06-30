@@ -23,7 +23,7 @@
       "title": "Données brutes",
       "type": "stat",
       "gridPos": {"h": 3, "w": 8, "x": 0, "y": 1},
-      "targets": [{"expr": "windmill_pipeline_raw_data_total_ratio", "refId": "A", "legendFormat": "Brutes"}],
+      "targets": [{"expr": "kestra_pipeline_raw_data_total_ratio", "refId": "A", "legendFormat": "Brutes"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "thresholds"},
@@ -38,7 +38,7 @@
       "title": "Données normalisées",
       "type": "stat",
       "gridPos": {"h": 3, "w": 8, "x": 8, "y": 1},
-      "targets": [{"expr": "windmill_pipeline_normalized_data_total_ratio", "refId": "A", "legendFormat": "Normalisées"}],
+      "targets": [{"expr": "kestra_pipeline_normalized_data_total_ratio", "refId": "A", "legendFormat": "Normalisées"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "thresholds"},
@@ -53,7 +53,7 @@
       "title": "Données rejetées",
       "type": "stat",
       "gridPos": {"h": 3, "w": 8, "x": 16, "y": 1},
-      "targets": [{"expr": "windmill_pipeline_rejected_data_total_ratio", "refId": "A", "legendFormat": "Rejetées"}],
+      "targets": [{"expr": "kestra_pipeline_rejected_data_total_ratio", "refId": "A", "legendFormat": "Rejetées"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "thresholds"},
@@ -69,9 +69,9 @@
       "type": "timeseries",
       "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
       "targets": [
-        {"expr": "windmill_pipeline_raw_data_total_ratio", "legendFormat": "Brutes", "refId": "A"},
-        {"expr": "windmill_pipeline_normalized_data_total_ratio", "legendFormat": "Normalisées", "refId": "B"},
-        {"expr": "windmill_pipeline_rejected_data_total_ratio", "legendFormat": "Rejetées", "refId": "C"}
+        {"expr": "kestra_pipeline_raw_data_total_ratio", "legendFormat": "Brutes", "refId": "A"},
+        {"expr": "kestra_pipeline_normalized_data_total_ratio", "legendFormat": "Normalisées", "refId": "B"},
+        {"expr": "kestra_pipeline_rejected_data_total_ratio", "legendFormat": "Rejetées", "refId": "C"}
       ],
       "fieldConfig": {
         "defaults": {
@@ -87,7 +87,7 @@
       "title": "🍩 Répartition par source",
       "type": "piechart",
       "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
-      "targets": [{"expr": "windmill_pipeline_raw_by_source_ratio", "refId": "A"}],
+      "targets": [{"expr": "kestra_pipeline_raw_by_source_ratio", "refId": "A"}],
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "palette-classic"},
@@ -102,7 +102,7 @@
       "type": "barchart",
       "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
       "targets": [
-        {"expr": "windmill_pipeline_latency_last_milliseconds", "refId": "A", "legendFormat": "{{script}}"}
+        {"expr": "kestra_pipeline_latency_last_milliseconds", "refId": "A", "legendFormat": "{{script}}"}
       ],
       "fieldConfig": {
         "defaults": {
@@ -119,7 +119,7 @@
       "type": "barchart",
       "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
       "targets": [
-        {"expr": "windmill_pipeline_latency_avg_milliseconds", "refId": "A", "legendFormat": "{{script}}"}
+        {"expr": "kestra_pipeline_latency_avg_milliseconds", "refId": "A", "legendFormat": "{{script}}"}
       ],
       "fieldConfig": {
         "defaults": {
@@ -136,7 +136,7 @@
       "type": "barchart",
       "gridPos": {"h": 6, "w": 12, "x": 0, "y": 20},
       "targets": [
-        {"expr": "windmill_pipeline_error_rate_percent", "refId": "A", "legendFormat": "{{script}}"}
+        {"expr": "kestra_pipeline_error_rate_percent", "refId": "A", "legendFormat": "{{script}}"}
       ],
       "fieldConfig": {
         "defaults": {
@@ -158,8 +158,8 @@
       "type": "barchart",
       "gridPos": {"h": 6, "w": 12, "x": 12, "y": 20},
       "targets": [
-        {"expr": "windmill_pipeline_errors_total_ratio", "legendFormat": "Erreurs", "refId": "A"},
-        {"expr": "windmill_pipeline_success_total_ratio", "legendFormat": "Succès", "refId": "B"}
+        {"expr": "kestra_pipeline_errors_total_ratio", "legendFormat": "Erreurs", "refId": "A"},
+        {"expr": "kestra_pipeline_success_total_ratio", "legendFormat": "Succès", "refId": "B"}
       ],
       "fieldConfig": {
         "defaults": {
@@ -176,7 +176,7 @@
       "type": "barchart",
       "gridPos": {"h": 8, "w": 12, "x": 0, "y": 26},
       "targets": [
-        {"expr": "windmill_pipeline_cpu_percent", "refId": "A", "legendFormat": "{{script}}"}
+        {"expr": "kestra_pipeline_cpu_percent", "refId": "A", "legendFormat": "{{script}}"}
       ],
       "fieldConfig": {
         "defaults": {
@@ -193,7 +193,7 @@
       "type": "barchart",
       "gridPos": {"h": 8, "w": 12, "x": 12, "y": 26},
       "targets": [
-        {"expr": "windmill_pipeline_memory_mb_MB", "refId": "A", "legendFormat": "{{script}}"}
+        {"expr": "kestra_pipeline_memory_mb_MB", "refId": "A", "legendFormat": "{{script}}"}
       ],
       "fieldConfig": {
         "defaults": {
@@ -210,9 +210,9 @@
       "type": "table",
       "gridPos": {"h": 6, "w": 24, "x": 0, "y": 34},
       "targets": [
-        {"expr": "windmill_pipeline_raw_data_total_ratio", "refId": "A", "legendFormat": "Brutes"},
-        {"expr": "windmill_pipeline_normalized_data_total_ratio", "refId": "B", "legendFormat": "Normalisées"},
-        {"expr": "windmill_pipeline_rejected_data_total_ratio", "refId": "C", "legendFormat": "Rejetées"}
+        {"expr": "kestra_pipeline_raw_data_total_ratio", "refId": "A", "legendFormat": "Brutes"},
+        {"expr": "kestra_pipeline_normalized_data_total_ratio", "refId": "B", "legendFormat": "Normalisées"},
+        {"expr": "kestra_pipeline_rejected_data_total_ratio", "refId": "C", "legendFormat": "Rejetées"}
       ],
       "fieldConfig": {
         "defaults": {"custom": {"align": "auto"}, "unit": "short"}

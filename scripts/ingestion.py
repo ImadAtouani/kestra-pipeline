@@ -266,7 +266,7 @@ def main(
             if source_path.startswith('/'):
                 actual_file_path = source_path
             else:
-                actual_file_path = f"/data/{source_path}"
+                actual_file_path = f"/app/data/{source_path}"
         
         headers_dict = json.loads(headers) if headers else {}
         params_dict = json.loads(params) if params else {}

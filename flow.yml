@@ -47,13 +47,13 @@ tasks:
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo pandas openpyxl requests beautifulsoup4 sqlalchemy psycopg2-binary pyarrow
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import csv
       import re
       import time
@@ -389,19 +389,19 @@ tasks:
           variables='{{ inputs.variables | default('{}') }}'
       )
       
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
 
   - id: profiling
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import time
       from datetime import datetime
       from pymongo import MongoClient
@@ -523,21 +523,21 @@ tasks:
                   pass
               return {"status": "error", "message": str(e), "step": "profiling"}
       
-      ingestion_result = json.loads('''{{ outputs.ingestion.result | json }}''')
+      ingestion_result = json.loads('{{ outputs.ingestion.vars.result }}')
       result = main(ingestion_result['raw_payload']['data'])
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
 
   - id: parsing
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo beautifulsoup4
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import re
       import time
       from typing import Literal, Dict, Any
@@ -719,21 +719,21 @@ tasks:
                   pass
               return {"status": "error", "message": str(e), "step": "parsing"}
       
-      ingestion_result = json.loads('''{{ outputs.ingestion.result | json }}''')
+      ingestion_result = json.loads('{{ outputs.ingestion.vars.result }}')
       result = main(ingestion_result['raw_payload']['data'], format="{{ inputs.source_type }}")
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
 
   - id: mapping
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import time
       from datetime import datetime
       from pymongo import MongoClient
@@ -863,21 +863,21 @@ tasks:
                   pass
               return {"status": "error", "message": str(e), "step": "mapping"}
       
-      parsing_result = json.loads('''{{ outputs.parsing.result | json }}''')
+      parsing_result = json.loads('{{ outputs.parsing.vars.result }}')
       result = main(parsing_result['parsed_data'])
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
 
   - id: cleaning
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import time
       from datetime import datetime
       from pymongo import MongoClient
@@ -997,21 +997,21 @@ tasks:
                   pass
               return {"status": "error", "message": str(e), "step": "cleaning"}
       
-      mapping_result = json.loads('''{{ outputs.mapping.result | json }}''')
+      mapping_result = json.loads('{{ outputs.mapping.vars.result }}')
       result = main(mapping_result['mapped_data'])
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
 
   - id: typing
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import time
       from typing import Literal, Dict, Any
       from datetime import datetime
@@ -1185,21 +1185,21 @@ tasks:
                   pass
               return {"status": "error", "message": str(e), "step": "typing"}
       
-      cleaning_result = json.loads('''{{ outputs.cleaning.result | json }}''')
+      cleaning_result = json.loads('{{ outputs.cleaning.vars.result }}')
       result = main(cleaning_result['cleaned_data'])
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
 
   - id: standardization
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import time
       from datetime import datetime
       from pymongo import MongoClient
@@ -1326,21 +1326,21 @@ tasks:
                   pass
               return {"status": "error", "message": str(e), "step": "standardization"}
       
-      typing_result = json.loads('''{{ outputs.typing.result | json }}''')
+      typing_result = json.loads('{{ outputs.typing.vars.result }}')
       result = main(typing_result['typed_data'])
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
 
   - id: dedup
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import hashlib
       import time
       from datetime import datetime
@@ -1447,21 +1447,21 @@ tasks:
                   pass
               return {"status": "error", "message": str(e), "step": "dedup"}
       
-      standardization_result = json.loads('''{{ outputs.standardization.result | json }}''')
+      standardization_result = json.loads('{{ outputs.standardization.vars.result }}')
       result = main(standardization_result['standardized_data'])
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
 
   - id: validation
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import time
       from datetime import datetime
       from pymongo import MongoClient
@@ -1606,21 +1606,150 @@ tasks:
                   pass
               return {"status": "error", "message": str(e), "step": "validation"}
       
-      dedup_result = json.loads('''{{ outputs.dedup.result | json }}''')
+      dedup_result = json.loads('{{ outputs.dedup.vars.result }}')
       result = main(dedup_result['deduplicated_data'])
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
+
+  - id: enrichment
+    type: io.kestra.plugin.scripts.python.Script
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
+    script: |
+      import sys
+      import os
+      import json
+      from kestra import Kestra
+      import time
+      from datetime import datetime
+      from pymongo import MongoClient
+      
+      def get_cpu_usage():
+          try:
+              with open('/proc/stat', 'r') as f:
+                  line = f.readline()
+                  parts = line.split()
+                  user = int(parts[1])
+                  nice = int(parts[2])
+                  system = int(parts[3])
+                  idle = int(parts[4])
+                  total = user + nice + system + idle
+                  return round(((total - idle) / total) * 100, 2) if total > 0 else 0
+          except:
+              return 0
+      
+      def get_memory_mb():
+          try:
+              with open('/proc/self/status', 'r') as f:
+                  for line in f:
+                      if line.startswith('VmRSS:'):
+                          kb = int(line.split()[1])
+                          return round(kb / 1024, 2)
+          except:
+              return 0
+      
+      def main(validated_data):
+          start_time = time.time()
+          script_name = "enrichment"
+          
+          try:
+              print("=" * 60)
+              print("📥 Données reçues dans enrichment:")
+              print(f"  - Type: {type(validated_data)}")
+              print(f"  - Clés: {list(validated_data.keys()) if isinstance(validated_data, dict) else 'Not a dict'}")
+              print("=" * 60)
+              
+              if not isinstance(validated_data, dict):
+                  duration_ms = (time.time() - start_time) * 1000
+                  client = MongoClient("mongodb://admin:changeme@mongodb:27017/")
+                  db = client["data_pipeline"]
+                  db.script_metrics.insert_one({
+                      "script": script_name,
+                      "duration_ms": duration_ms,
+                      "status": "error",
+                      "error": "validated_data is not a dict",
+                      "cpu_percent": get_cpu_usage(),
+                      "memory_mb": get_memory_mb(),
+                      "timestamp": datetime.now().isoformat()
+                  })
+                  return {"status": "error", "message": f"validated_data is not a dict: {type(validated_data)}", "step": "enrichment"}
+              
+              enriched = validated_data.copy()
+              enriched.update({
+                  "enriched_at": datetime.now().isoformat(),
+                  "pipeline_version": "1.0.0",
+                  "source_system": "kestra_pipeline",
+                  "processing_timestamp": datetime.now().timestamp()
+              })
+              
+              print(f"📊 Données enrichies avec:")
+              print(f"  - enriched_at: {enriched['enriched_at']}")
+              print(f"  - pipeline_version: {enriched['pipeline_version']}")
+              print(f"  - source_system: {enriched['source_system']}")
+              print("=" * 60)
+              
+              duration_ms = (time.time() - start_time) * 1000
+              client = MongoClient("mongodb://admin:changeme@mongodb:27017/")
+              db = client["data_pipeline"]
+              db.script_metrics.insert_one({
+                  "script": script_name,
+                  "duration_ms": duration_ms,
+                  "status": "success",
+                  "cpu_percent": get_cpu_usage(),
+                  "memory_mb": get_memory_mb(),
+                  "timestamp": datetime.now().isoformat()
+              })
+              
+              return {
+                  "status": "success",
+                  "enriched_data": enriched,
+                  "duration_ms": round(duration_ms, 2),
+                  "cpu_percent": get_cpu_usage(),
+                  "memory_mb": get_memory_mb(),
+                  "step": "enrichment"
+              }
+              
+          except Exception as e:
+              duration_ms = (time.time() - start_time) * 1000
+              try:
+                  client = MongoClient("mongodb://admin:changeme@mongodb:27017/")
+                  db = client["data_pipeline"]
+                  db.script_metrics.insert_one({
+                      "script": script_name,
+                      "duration_ms": duration_ms,
+                      "status": "error",
+                      "error": str(e)[:100],
+                      "cpu_percent": get_cpu_usage(),
+                      "memory_mb": get_memory_mb(),
+                      "timestamp": datetime.now().isoformat()
+                  })
+              except:
+                  pass
+              return {"status": "error", "message": str(e), "step": "enrichment"}
+      
+      validation_result = json.loads('{{ outputs.validation.vars.result }}')
+      
+      # Si validation est rejetée, validated_data est None, on passe un dict vide
+      if validation_result['status'] == 'valid' and validation_result.get('validated_data') is not None:
+          result = main(validation_result['validated_data'])
+      else:
+          # Données rejetées, on passe un dict vide pour l'enrichissement
+          result = main({})
+      
+      Kestra.outputs({"result": result})
 
   - id: mongodb_writer
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import hashlib
       import time
       from typing import Literal, Dict, Any
@@ -1752,26 +1881,28 @@ tasks:
                   pass
               return {"status": "error", "message": str(e), "step": "mongodb_write"}
       
-      validation_result = json.loads('''{{ outputs.validation.result | json }}''')
+      enrichment_result = json.loads('{{ outputs.enrichment.vars.result }}')
+      validation_result = json.loads('{{ outputs.validation.vars.result }}')
       
+      # Si validation est valide, on écrit dans normalized_data, sinon dans rejected_data
       if validation_result['status'] == 'valid':
-          result = main(validation_result['validated_data'], 'normalized_data')
+          result = main(enrichment_result.get('enriched_data', {}), 'normalized_data')
       else:
-          result = main(validation_result['validated_data'] or {}, 'rejected_data')
+          result = main(enrichment_result.get('enriched_data', {}), 'rejected_data')
       
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
 
   - id: send_metrics
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-      image: python:3.12-slim
-    beforeCommands:
-      - pip install pymongo
+      image: kestra-pipeline:latest
+      networkMode: kestra_kestra_network
     script: |
       import sys
       import os
       import json
+      from kestra import Kestra
       import time
       import urllib.request
       import urllib.error
@@ -1910,6 +2041,5 @@ tasks:
               print(f"❌ Erreur: {e}")
               return {"status": "error", "message": str(e), "step": "send_metrics"}
       
-      mongodb_result = json.loads('''{{ outputs.mongodb_writer.result | json }}''')
       result = main()
-      print(json.dumps(result))
+      Kestra.outputs({"result": result})
